@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 
 export const chatSchema = new Schema(
   {
@@ -7,7 +7,7 @@ export const chatSchema = new Schema(
       ref: 'User',
       index: true,
     },
-    text: {
+    message: {
       type: String,
       required: true,
       index: true,
@@ -20,3 +20,9 @@ export const chatSchema = new Schema(
   },
   { timestamps: true, versionKey: false },
 );
+
+export interface IChat extends Document {
+  sender: string;
+  message: string;
+  receiver: string;
+}

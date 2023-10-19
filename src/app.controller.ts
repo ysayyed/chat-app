@@ -10,4 +10,22 @@ export class AppController {
   getHello(): object {
     return this.appService.getHello();
   }
+
+  @Get('/chat')
+  @Render('chat')
+  getChatRoom() {
+    return;
+  }
+
+  @Get('/signup')
+  @Render('signup')
+  getSignup() {
+    return;
+  }
+
+  @Get('/login')
+  @Render('login')
+  getLogin() {
+    return;
+  }
 }

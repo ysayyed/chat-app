@@ -4,12 +4,16 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
 import { ChatModule } from './chat/chat.module';
+import { SocketModule } from './socket/socket.module';
+import { ContactsModule } from './contacts/contacts.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://127.0.0.1:27017/chat-app'),
     UserModule,
     ChatModule,
+    SocketModule,
+    ContactsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

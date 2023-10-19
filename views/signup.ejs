@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup</title>
+    <style>
+      * {
+        margin: 0 auto;
+      }
+
+      .form {
+        background-color: #333;
+        border: 1px solid #333;
+        width: 500px;
+        box-shadow: 1px 2px 5px #333;
+        border-radius: 20px;
+        margin: 0 auto;
+      }
+
+      .form > h1 {
+        color: palegreen;
+      }
+
+      form > button {
+        margin: 10px 0px 10px 0;
+        background-color: seagreen;
+        outline: none;
+        border: none;
+        padding: 10px;
+        color: black;
+        font-size: medium;
+        font-weight: bold;
+      }
+
+      form > button:hover {
+        background-color: palegreen;
+        cursor: pointer;
+      }
+
+      form {
+        margin: 20px;
+        color: white;
+        justify-content: center;
+      }
+
+      form > input {
+        width: 100%;
+        height: 25px;
+        margin: 10px 10px 10px 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="header">
+      <h1>Unicsol pvt. ltd.</h1>
+      <nav class="navbar">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/login">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+    <br />
+    <fieldset class="form">
+      <h1>Signup</h1>
+      <br />
+      <hr />
+      <form action="/user/signup" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+        <button type="submit" onclick="signupHandler()">Sign Up</button>
+      </form>
+    </fieldset>
+    <script>
+      function signupHandler() {
+        alert('Created');
+      }
+    </script>
+  </body>
+</html>

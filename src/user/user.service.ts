@@ -7,11 +7,22 @@ import { IUser } from './Schema/user.schema';
 export class UserService {
   constructor(
     @InjectModel('User')
-    private readonly userModel: Model<IUser>,
+    private userModel: Model<IUser>,
   ) {}
 
   async createUser(data: any) {
-    const user = await this.userModel.create(data);
-    return user;
+    await this.userModel.create(data);
+    return;
+  }
+
+  async login(data: any) {
+    const { email, password } = data;
+    const user = await this.userModel.findOne({ email: email });
+    
+    if (user && user.password === password) {
+      return user;
+    } else {
+      return false;
+    }
   }
 }
