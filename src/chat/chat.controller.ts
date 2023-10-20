@@ -14,11 +14,14 @@ export class ChatController {
   @Get('/chatRoom/:requestId')
   @Render('chatRoom')
   async getChatRoom(
-    @Param('requestId') requestId: any,
-    @Param('userId') userId: any,
+    @Param('requestId') requestId: any, //Id of receiver
+    @Param('userId') userId: any, // Id of logged in user
   ) {
     const chats = await this.chatService.getContactMessages(requestId, userId);
-    return;
+    const user = await this.userService.findOne(userId);
+    const receiver = await this.userService.findOne(requestId);
+    console.log(chats);
+    return { user: user, receiver: receiver, chats };
   }
 
   @Get()

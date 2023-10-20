@@ -4,8 +4,74 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      body {
+        margin: 0;
+        font-size: 20px;
+      }
+      .sender {
+        list-style-type: none;
+        text-align: end;
+        padding-right: 40px;
+      }
+      .recepient {
+        list-style-type: none;
+        text-align: start;
+        padding-left: 40px;
+      }
+      .connecteduser {
+        color: #333;
+        text-align: center;
+      }
+      #sendarea {
+        width: 850px;
+        height: 40px;
+        font-size: 20px;
+      }
+      .sendBtn {
+        width: 80px;
+        height: 48px;
+        background-color: darkslategray;
+        color: palegoldenrod;
+        font-size: 15px;
+        font-weight: bold;
+      }
+    </style>
   </head>
   <body>
-    <h1>Hello</h1>
+    <div style="width: 100%">
+      <div class="connecteduser">
+        You are chatting with
+        <span style="color: darkred"><%= receiver.name %></span>
+      </div>
+      <div
+        id="messageArea"
+        style="overflow-y: scroll; height: 68dvh; padding: 1%"
+      ></div>
+      <div style="position: fixed; margin: 40px; bottom: 10px">
+        <input id="sendarea" type="text" />
+        <button class="sendBtn" onClick="submitHandler()">Send</button>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      function submitHandler() {
+        const message = document.getElementById('sendarea');
+        const messageArea = document.getElementById('messageArea');
+        const para = document.createElement('p');
+        para.innerHTML = message.value;
+        para.setAttribute('class', 'sender');
+        const mesgNode = para;
+        messageArea.appendChild(mesgNode);
+        socket.emit('chat', {
+          message: message.value,
+          sender: '<%= user._id %>',
+          receiver: '<%= receiver._id %>',
+        });
+        message.value = '';
+        document.getElementById('sendarea').focus();
+      }
+    </script>
   </body>
 </html>
