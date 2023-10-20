@@ -11,12 +11,6 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('/chat')
-  @Render('chat')
-  getChatRoom() {
-    return;
-  }
-
   @Get('/signup')
   @Render('signup')
   getSignup() {

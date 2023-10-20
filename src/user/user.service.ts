@@ -18,11 +18,20 @@ export class UserService {
   async login(data: any) {
     const { email, password } = data;
     const user = await this.userModel.findOne({ email: email });
-    
+
     if (user && user.password === password) {
       return user;
     } else {
       return false;
     }
+  }
+
+  async findAll() {
+    const users = await this.userModel.find();
+    return users;
+  }
+
+  async findOne(id: string) {
+    return await this.userModel.findById(id);
   }
 }

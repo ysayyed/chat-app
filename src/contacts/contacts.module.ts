@@ -10,5 +10,6 @@ import { contactSchema } from './Schema/contact.schema';
   ],
   controllers: [ContactsController],
   providers: [ContactsService],
+  exports: [ContactsService],
 })
 export class ContactsModule {}

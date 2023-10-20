@@ -7,10 +7,14 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from 'src/chat/chat.service';
+import { ContactsService } from 'src/contacts/contacts.service';
 
 @WebSocketGateway()
 export class SocketGateway {
-  constructor() {} // private readonly chatService: ChatService
+  constructor(
+    private contactService: ContactsService,
+    private chatService: ChatService,
+  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -22,5 +26,17 @@ export class SocketGateway {
   ) {
     console.log(data, client.id);
     return data;
+  }
+
+  @SubscribeMessage('contactRequest')
+  async contactRequestHandler(@MessageBody() data: any) {
+    // console.log(data);
+    return await this.contactService.requestContact(data);
+  }
+
+  @SubscribeMessage('acceptRequest')
+  async acceptRequestHandler(@MessageBody() data: any) {
+    const acceptedRequest = await this.contactService.acceptRequest(data);
+    return;
   }
 }

@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 
 export const contactSchema = new Schema(
   {
@@ -6,9 +6,13 @@ export const contactSchema = new Schema(
       type: String,
       required: true,
     },
+    requestFrom: {
+      type: Schema.ObjectId,
+      ref: 'User',
+    },
     receiver: {
-      type: String,
-      required: true,
+      type: Schema.ObjectId,
+      ref: 'User',
     },
     isAccepted: {
       type: Boolean,
@@ -19,5 +23,12 @@ export const contactSchema = new Schema(
       default: null,
     },
   },
-  { timestamps: false, versionKey: false },
+  { timestamps: true, versionKey: false },
 );
+
+export interface IContact extends Document {
+  sender: string;
+  receiver: string;
+  isAccepted: boolean;
+  isRejected: boolean;
+}

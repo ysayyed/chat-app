@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <style>
+      * {
+        margin: 0;
+      }
+
+      body {
+        margin: 0 auto;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        background: #333;
+        justify-content: space-between;
+      }
+
+      .navbar {
+        display: flex;
+      }
+
+      .header > h1 {
+        margin-left: 20px;
+        color: white;
+      }
+
+      .navbar > ul {
+        display: flex;
+        gap: 2rem;
+        margin: 20px;
+      }
+
+      .navbar > ul > li {
+        list-style: none;
+      }
+
+      .navbar > ul > li > a {
+        text-decoration: none;
+        color: white;
+        padding: 2%;
+      }
+
+      .navbar > ul > li > a:hover {
+        color: dodgerblue;
+      }
+
+      .msg {
+        margin: 20px;
+        text-align: center;
+      }
+
+      .msg > h1 {
+        color: dodgerblue;
+        margin: 2%;
+      }
+      th,
+      tr,
+      td {
+        text-align: center;
+      }
+
+      table {
+        margin: 0 auto;
+        width: 50%;
+        border: 1px solid darkslategray;
+      }
+      th,
+      td {
+        text-align: start;
+      }
+      th {
+        background: darkslategray;
+        color: white;
+      }
+      table,
+      th,
+      tr {
+        border-collapse: collapse;
+      }
+      th:last-child {
+        text-align: center;
+      }
+
+      td:nth-child(4),
+      td:last-child {
+        text-align: center;
+      }
+
+      tr {
+        border-bottom: 1px solid darkslategray;
+      }
+
+      td {
+        padding: 2%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="header">
+      <h1>Nearluk pvt. ltd.</h1>
+      <nav class="navbar">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/chat/<%= user._id %>">Chat</a></li>
+          <li>
+            <form action="/user/logout" method="post">
+              <button type="submit">Logout</button>
+            </form>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <br />
+    <h1 style="text-align: center">
+      Welcome, <span style="color: teal"><%= user.name %></span>
+    </h1>
+    <br />
+    <h1 style="text-align: center">
+      Statement showing connected / not connected users
+    </h1>
+    <br />
+    <table>
+      <tr>
+        <th>S.No.</th>
+        <th>User name</th>
+        <th>Email</th>
+        <th>Action</th>
+      </tr>
+      <% users.forEach((arrayUser,index) => { %> <% if (arrayUser.name !==
+      user.name) { %>
+
+      <tr>
+        <td><%= index+1 %></td>
+        <td><%= arrayUser.name %></td>
+        <td><%= arrayUser.email %></td>
+        <td>
+          <button
+            onClick="requestHandler('<%= arrayUser._id%>', '<%= arrayUser.name%>','<%= user._id %>')"
+          >
+            Send Request
+          </button>
+        </td>
+      </tr>
+      <% } %> <% }) %>
+    </table>
+    <br />
+    <br />
+    <hr />
+    <br />
+    <br />
+    <h1 style="text-align: center">Contact requests</h1>
+
+    <table>
+      <tr>
+        <th>S.No.</th>
+        <th>Sender ID</th>
+        <th>Sender Name</th>
+        <th>Action</th>
+      </tr>
+      <% contacts.forEach((arrayUser,index) => { %> <% if ( arrayUser.receiver
+      !== user._id && arrayUser.isAccepted === false && arrayUser.isRejected ===
+      null) { %>
+
+      <tr>
+        <td><%= index+1 %></td>
+        <td><%= arrayUser.requestFrom %></td>
+        <td><%= arrayUser.sender %></td>
+        <td>
+          <button
+            onClick="acceptHandler('<%= arrayUser.requestFrom %>', '<%= user.id%>')"
+          >
+            Accept Request
+          </button>
+        </td>
+      </tr>
+      <% } else if(arrayUser.receiver === user.id) { %>
+      <tr>
+        <td colspan="4">You have no Contact requests</td>
+      </tr>
+      <% } %> <% }) %>
+    </table>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      function requestHandler(senderId, senderName, receiverId) {
+        console.log(senderId, receiverId);
+        return socket.emit('contactRequest', {
+          sender: senderName,
+          requestFrom: senderId,
+          receiver: receiverId,
+        });
+      }
+
+      function acceptHandler(inviteId, receiverId) {
+        return socket.emit('acceptRequest', { inviteId, receiverId });
+      }
+    </script>
+  </body>
+</html>
