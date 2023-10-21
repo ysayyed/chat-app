@@ -24,7 +24,9 @@ export class UserController {
   @Post('/signup')
   @Redirect('/login')
   async create(@Body() payload: any) {
-    return this.userService.createUser(payload);
+    await this.userService.createUser(payload);
+    // console.log(payload);
+    return;
   }
 
   @Post('/login')

@@ -141,13 +141,13 @@
         <td><%= arrayUser.email %></td>
         <td>
           <button
-            onClick="requestHandler('<%= arrayUser._id%>', '<%= arrayUser.name%>','<%= user._id %>')"
+            onClick="requestHandler('<%= user._id%>', '<%= user.name%>','<%= arrayUser._id %>', '<%= arrayUser.name %>')"
           >
             Send Request
           </button>
         </td>
       </tr>
-      <% } %> <% }) %>
+      <% } %> <% }); %>
     </table>
     <br />
     <br />
@@ -155,7 +155,7 @@
     <br />
     <br />
     <h1 style="text-align: center">Contact requests</h1>
-
+    <br />
     <table>
       <tr>
         <th>S.No.</th>
@@ -179,7 +179,7 @@
           </button>
         </td>
       </tr>
-      <% } else if(arrayUser.receiver === user.id) { %>
+      <% } else { %>
       <tr>
         <td colspan="4">You have no Contact requests</td>
       </tr>
@@ -189,10 +189,11 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io();
-      function requestHandler(senderId, senderName, receiverId) {
+      function requestHandler(senderId, senderName, receiverId, recepient) {
         console.log(senderId, receiverId);
         return socket.emit('contactRequest', {
           sender: senderName,
+          recepient: recepient,
           requestFrom: senderId,
           receiver: receiverId,
         });

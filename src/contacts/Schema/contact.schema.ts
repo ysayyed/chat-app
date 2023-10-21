@@ -6,6 +6,10 @@ export const contactSchema = new Schema(
       type: String,
       required: true,
     },
+    recepient: {
+      type: String,
+      required: true,
+    },
     requestFrom: {
       type: Schema.ObjectId,
       ref: 'User',

@@ -66,7 +66,7 @@
         <% } %> <% }) %>
       </div>
       <div style="position: fixed; margin: 40px; bottom: 10px">
-        <input id="sendarea" type="text" />
+        <input id="sendarea" autocomplete="off" type="text" />
         <button class="sendBtn" onClick="submitHandler()">Send</button>
       </div>
     </div>
@@ -113,7 +113,6 @@
           para.appendChild(document.createElement('br'));
           para.appendChild(time);
           messageArea.appendChild(para);
-          location.reload();
         }
       });
     </script>

@@ -41,7 +41,7 @@ export class ContactsService {
       },
       { $set: { isAccepted: true, isRejected: false } },
     );
-    console.log(acceptedRequest);
+    // console.log(acceptedRequest);
     return;
   }
 
@@ -52,9 +52,17 @@ export class ContactsService {
 
   async listContacts(userId: any) {
     const contacts = await this.contactModel.find({
-      receiver: new Types.ObjectId(userId),
-      isAccepted: true,
+      $and: [
+        {
+          $or: [
+            { requestFrom: new Types.ObjectId(userId) },
+            { receiver: new Types.ObjectId(userId) },
+          ],
+        },
+        { isAccepted: true },
+      ],
     });
+    // console.log(contacts);
     return contacts;
   }
 

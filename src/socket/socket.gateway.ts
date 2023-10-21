@@ -35,7 +35,7 @@ export class SocketGateway {
 
   @SubscribeMessage('acceptRequest')
   async acceptRequestHandler(@MessageBody() data: any) {
-    const acceptedRequest = await this.contactService.acceptRequest(data);
+    await this.contactService.acceptRequest(data);
     return;
   }
 }

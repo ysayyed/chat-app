@@ -106,7 +106,7 @@
       }
       .listDiv {
         text-align: center;
-        margin-top: 3%;
+        margin: 25px 0 25px 0;
       }
     </style>
   </head>
@@ -138,12 +138,28 @@
       <br />
 
       <div style="width: 25%; background: steelblue">
-        <p style="text-align: center; color: white; font-weight: bold">
+        <p
+          style="
+            text-align: center;
+            color: gold;
+            font-weight: bold;
+            margin-top: 10px;
+          "
+        >
           <%= user.name %> Contacts
         </p>
 
         <% contacts.forEach( (contact)=> { %>
         <div class="listDiv">
+          <% if (user.name == contact.sender) { %>
+          <a
+            href="<%= user._id%>/chatRoom/<%= contact.receiver %>"
+            target="chatRoom"
+            class="listButton"
+          >
+            <%= contact.recepient %>
+          </a>
+          <% } else if(user.name == contact.recepient) { %>
           <a
             href="<%= user._id%>/chatRoom/<%= contact.requestFrom %>"
             target="chatRoom"
@@ -151,6 +167,7 @@
           >
             <%= contact.sender %>
           </a>
+          <% } %>
         </div>
         <% }) %>
       </div>

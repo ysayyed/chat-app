@@ -23,10 +23,22 @@ export class ChatService {
     const chats = await this.chatModel
       .find({
         $or: [
-          { sender: new Types.ObjectId(userId) },
-          { receiver: new Types.ObjectId(requestId) },
-          { sender: new Types.ObjectId(requestId) },
-          { receiver: new Types.ObjectId(userId) },
+          {
+            $and: [
+              {
+                sender: new Types.ObjectId(userId),
+                receiver: new Types.ObjectId(requestId),
+              },
+            ],
+          },
+          {
+            $and: [
+              {
+                sender: new Types.ObjectId(requestId),
+                receiver: new Types.ObjectId(userId),
+              },
+            ],
+          },
         ],
       })
       .sort({ createdAt: 1 });
