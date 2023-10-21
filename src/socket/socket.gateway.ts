@@ -22,9 +22,9 @@ export class SocketGateway {
   @SubscribeMessage('chat')
   async handleChatEvent(@MessageBody() data: any) {
     const { sender, message, receiver } = data;
-    console.log(data);
     const chat = await this.chatService.saveMessage(sender, message, receiver);
-    return data;
+    this.server.emit('receivedChat', chat);
+    return;
   }
 
   @SubscribeMessage('contactRequest')

@@ -20,14 +20,16 @@ export class ChatService {
   }
 
   async getContactMessages(requestId: any, userId: any) {
-    const receivedMessages = await this.chatModel.find({
-      receiver: new Types.ObjectId(userId),
-      sender: new Types.ObjectId(requestId),
-    });
-    const sentMessages = await this.chatModel.find({
-      receiver: new Types.ObjectId(requestId),
-      sender: new Types.ObjectId(userId),
-    });
-    return { receivedMessages, sentMessages };
+    const chats = await this.chatModel
+      .find({
+        $or: [
+          { sender: new Types.ObjectId(userId) },
+          { receiver: new Types.ObjectId(requestId) },
+          { sender: new Types.ObjectId(requestId) },
+          { receiver: new Types.ObjectId(userId) },
+        ],
+      })
+      .sort({ createdAt: 1 });
+    return chats;
   }
 }

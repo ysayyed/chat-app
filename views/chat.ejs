@@ -97,6 +97,7 @@
         text-align: center;
         background: #333;
         padding: 2%;
+        text-decoration: none;
       }
       .listButton:hover {
         color: #333;
@@ -147,14 +148,13 @@
             href="<%= user._id%>/chatRoom/<%= contact.requestFrom %>"
             target="chatRoom"
             class="listButton"
-            onClick="chatRoomHandler('<%= contact.requestFrom%>')"
           >
             <%= contact.sender %>
           </a>
         </div>
         <% }) %>
       </div>
-      <iframe name="chatRoom" width="75%" frameborder="0"></iframe>
+      <iframe name="chatRoom" width="75%" id="iframe" frameborder="0"> </iframe>
       <!-- <div style="width: 100%">
         <div class="connecteduser">User 1</div>
         <div
@@ -185,10 +185,6 @@
           });
           message.value = '';
           document.getElementById('sendarea').focus();
-        }
-
-        function chatRoomHandler(chatId) {
-          console.log(chatId);
         }
       </script>
     </div>

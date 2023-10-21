@@ -10,12 +10,10 @@
         font-size: 20px;
       }
       .sender {
-        list-style-type: none;
         text-align: end;
         padding-right: 40px;
       }
       .recepient {
-        list-style-type: none;
         text-align: start;
         padding-left: 40px;
       }
@@ -36,6 +34,10 @@
         font-size: 15px;
         font-weight: bold;
       }
+      .time {
+        font-size: 15px;
+        color: #333;
+      }
     </style>
   </head>
   <body>
@@ -44,10 +46,25 @@
         You are chatting with
         <span style="color: darkred"><%= receiver.name %></span>
       </div>
-      <div
-        id="messageArea"
-        style="overflow-y: scroll; height: 68dvh; padding: 1%"
-      ></div>
+      <div id="messageArea" style="overflow-y: scroll; height: 68dvh">
+        <% chats.forEach((chat) => { %> <% if (chat.sender == user.id) { %>
+        <div class="sender">
+          <p>
+            <%= chat.message %> <br /><span class="time"
+              ><%= chat.createdAt.toLocaleTimeString() %></span
+            >
+          </p>
+        </div>
+        <% } else if (chat.sender == receiver.id) { %>
+        <div class="recepient">
+          <p>
+            <%= chat.message %> <br /><span class="time"
+              ><%= chat.createdAt.toLocaleTimeString() %></span
+            >
+          </p>
+        </div>
+        <% } %> <% }) %>
+      </div>
       <div style="position: fixed; margin: 40px; bottom: 10px">
         <input id="sendarea" type="text" />
         <button class="sendBtn" onClick="submitHandler()">Send</button>
@@ -60,10 +77,16 @@
         const message = document.getElementById('sendarea');
         const messageArea = document.getElementById('messageArea');
         const para = document.createElement('p');
-        para.innerHTML = message.value;
+        const time = document.createElement('span');
         para.setAttribute('class', 'sender');
-        const mesgNode = para;
-        messageArea.appendChild(mesgNode);
+        time.setAttribute('class', 'time');
+        let t = new Date();
+        t = t.toLocaleTimeString();
+        para.innerHTML = message.value;
+        time.innerHTML = t;
+        para.appendChild(document.createElement('br'));
+        para.appendChild(time);
+        messageArea.appendChild(para);
         socket.emit('chat', {
           message: message.value,
           sender: '<%= user._id %>',
@@ -72,6 +95,27 @@
         message.value = '';
         document.getElementById('sendarea').focus();
       }
+      var messageDiv = document.getElementById('messageArea');
+      messageDiv.scrollTop = messageDiv.scrollHeight;
+      socket.on('receivedChat', (data) => {
+        const { sender, receiver, message, createdAt } = data;
+        const userId = '<%= user._id %>';
+        if (userId == receiver) {
+          const messageArea = document.getElementById('messageArea');
+          const para = document.createElement('p');
+          const time = document.createElement('span');
+          para.setAttribute('class', 'recepient');
+          time.setAttribute('class', 'time');
+          let t = new Date();
+          t = t.toLocaleTimeString();
+          para.innerHTML = message;
+          time.innerHTML = t;
+          para.appendChild(document.createElement('br'));
+          para.appendChild(time);
+          messageArea.appendChild(para);
+          location.reload();
+        }
+      });
     </script>
   </body>
 </html>

@@ -20,7 +20,6 @@ export class ChatController {
     const chats = await this.chatService.getContactMessages(requestId, userId);
     const user = await this.userService.findOne(userId);
     const receiver = await this.userService.findOne(requestId);
-    console.log(chats);
     return { user: user, receiver: receiver, chats };
   }
 
