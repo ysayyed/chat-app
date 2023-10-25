@@ -33,8 +33,7 @@ export class ContactsService {
 
   async acceptRequest(data: any) {
     const { inviteId, receiverId } = data;
-    console.log(inviteId, receiverId);
-    const acceptedRequest = await this.contactModel.findOneAndUpdate(
+    await this.contactModel.findOneAndUpdate(
       {
         receiver: new Types.ObjectId(receiverId),
         requestFrom: new Types.ObjectId(inviteId),
@@ -45,8 +44,21 @@ export class ContactsService {
     return;
   }
 
-  async findContacts(receiver: any) {
-    const contacts = await this.contactModel.find({ receiver: receiver });
+  async rejectRequest(data: any) {
+    const { inviteId, receiverId } = data;
+    await this.contactModel.findOneAndDelete(
+      {
+        receiver: new Types.ObjectId(receiverId),
+        requestFrom: new Types.ObjectId(inviteId),
+      });
+    return;
+  }
+
+  async findContacts(userId: any) {
+    // const contacts = await this.contactModel.find({ receiver: receiver });
+    // console.log(userId)
+    const contacts = await this.contactModel.find({_id: {$ne: userId}});
+      // console.log(contacts)
     return contacts;
   }
 
@@ -73,4 +85,6 @@ export class ContactsService {
   remove(id: number) {
     return `This action removes a #${id} contact`;
   }
+  
+    
 }

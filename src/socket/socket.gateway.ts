@@ -38,4 +38,10 @@ export class SocketGateway {
     await this.contactService.acceptRequest(data);
     return;
   }
+
+  @SubscribeMessage('rejectRequest')
+  async rejectRequestHandler(@MessageBody() data: any) {
+    await this.contactService.rejectRequest(data);
+    return;
+  }
 }

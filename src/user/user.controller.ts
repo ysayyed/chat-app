@@ -13,6 +13,7 @@ import {
 import { UserService } from './user.service';
 import { Request, Response } from 'express';
 import { ContactsService } from 'src/contacts/contacts.service';
+import { Types, ObjectId } from 'mongoose';
 
 @Controller('user')
 export class UserController {
@@ -45,11 +46,45 @@ export class UserController {
   @Get('/dashboard')
   @Render('dashboard')
   async findAll(@Req() req: Request) {
-    const userId = req.cookies.userId;
-    const users = await this.userService.findAll();
+    let userId = req.cookies.userId;
+    const users = await this.userService.findAll(userId);
     const user = await this.userService.findOne(userId);
     const contacts = await this.contactService.findContacts(userId);
-    return { users, user, contacts };
+    const friends = []
+    const friendsName = []
+    const nonContacts = []
+
+    contacts.forEach(contact =>{
+    if(contact.requestFrom == user.id || contact.receiver == user.id){
+      friends.push({
+        sender: contact.sender,
+        receiver: contact.recepient
+      })}
+    })
+
+    friends.forEach(friend =>{
+      if(!(friend.sender == user.name)){
+        friendsName.push(friend.sender)
+      }
+      else if(!(friend.receiver == user.name)){
+        friendsName.push(friend.receiver)
+      }
+    })
+
+    users.forEach(usr=>{
+      if(!friendsName.includes(usr.name)){
+        nonContacts.push({
+          id: usr.id,
+          name: usr.name
+        })
+      }
+    })    
+
+    // console.log("Friends Name",friendsName)
+    // console.log("Friends",friends)
+    // console.log("nonContacts", nonContacts)
+
+    return { users, user, contacts, nonContacts };
   }
 
   @Post('/logout')

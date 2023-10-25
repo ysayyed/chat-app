@@ -1,4 +1,4 @@
-import { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
 export const contactSchema = new Schema(
   {
@@ -33,6 +33,8 @@ export const contactSchema = new Schema(
 export interface IContact extends Document {
   sender: string;
   receiver: string;
+  recepient: mongoose.ObjectId;
+  requestFrom: mongoose.ObjectId;
   isAccepted: boolean;
   isRejected: boolean;
 }

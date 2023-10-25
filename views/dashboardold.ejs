@@ -1,0 +1,102 @@
+<body>
+  <header class="header">
+    <h1>Nearluk pvt. ltd.</h1>
+    <nav class="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/chat/<%= user._id %>">Chat</a></li>
+        <li>
+          <form action="/user/logout" method="post">
+            <button type="submit">Logout</button>
+          </form>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <br />
+  <h1 style="text-align: center">
+    Welcome, <span style="color: teal"><%= user.name %></span>
+  </h1>
+  <br />
+  <h1 style="text-align: center">
+    Statement showing connected / not connected users
+  </h1>
+  <br />
+  <table>
+    <tr>
+      <th>S.No.</th>
+      <th>User name</th>
+      <th>Email</th>
+      <th>Action</th>
+    </tr>
+    <% users.forEach((arrayUser,index) => { %> <% if (arrayUser.name !==
+    user.name) { %>
+
+    <tr>
+      <td><%= index+1 %></td>
+      <td><%= arrayUser.name %></td>
+      <td><%= arrayUser.email %></td>
+      <td>
+        <button
+          onClick="requestHandler('<%= user._id%>', '<%= user.name%>','<%= arrayUser._id %>', '<%= arrayUser.name %>')"
+        >
+          Send Request
+        </button>
+      </td>
+    </tr>
+    <% } %> <% }); %>
+  </table>
+  <br />
+  <br />
+  <hr />
+  <br />
+  <br />
+  <h1 style="text-align: center">Contact requests</h1>
+  <br />
+  <table>
+    <tr>
+      <th>S.No.</th>
+      <th>Sender ID</th>
+      <th>Sender Name</th>
+      <th>Action</th>
+    </tr>
+    <% contacts.forEach((arrayUser,index) => { %> <% if ( arrayUser.receiver !==
+    user._id && arrayUser.isAccepted === false && arrayUser.isRejected === null)
+    { %>
+    <tr>
+      <td><%= index+1 %></td>
+      <td><%= arrayUser.requestFrom %></td>
+      <td><%= arrayUser.sender %></td>
+      <td>
+        <button
+          onClick="acceptHandler('<%= arrayUser.requestFrom %>', '<%= user.id%>')"
+        >
+          Accept Request
+        </button>
+      </td>
+    </tr>
+    <% } else { %>
+    <tr>
+      <td colspan="4">You have no Contact requests</td>
+    </tr>
+    <% } %> <% }) %>
+  </table>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+    function requestHandler(senderId, senderName, receiverId, recepient) {
+      console.log(senderId, receiverId);
+      return socket.emit('contactRequest', {
+        sender: senderName,
+        recepient: recepient,
+        requestFrom: senderId,
+        receiver: receiverId,
+      });
+    }
+
+    function acceptHandler(inviteId, receiverId) {
+      return socket.emit('acceptRequest', { inviteId, receiverId });
+    }
+  </script>
+</body>
