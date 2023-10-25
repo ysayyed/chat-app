@@ -6,6 +6,8 @@ import { UserModule } from './user/user.module';
 import { ChatModule } from './chat/chat.module';
 import { SocketModule } from './socket/socket.module';
 import { ContactsModule } from './contacts/contacts.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -14,6 +16,9 @@ import { ContactsModule } from './contacts/contacts.module';
     ChatModule,
     SocketModule,
     ContactsModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+  }),
   ],
   controllers: [AppController],
   providers: [AppService],

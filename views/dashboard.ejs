@@ -146,7 +146,7 @@
         <% }) %>
         <% } else { %>
           <tr>
-            <td colspan="2">No new Users</td>
+            <td colspan="2">No new users</td>
           </tr>
 
         <% } %>  
@@ -159,15 +159,13 @@
     <script>
       var socket = io();
       function requestHandler(senderId, senderName, receiverId, recepient) {
+        location.reload()
         return socket.emit('contactRequest', {
           sender: senderName,
           recepient: recepient,
           requestFrom: senderId,
           receiver: receiverId,
         });
-      }
-      function acceptHandler(inviteId, receiverId) {
-        return socket.emit('acceptRequest', { inviteId, receiverId });
       }
     </script>
 
@@ -208,8 +206,9 @@
     <table>
       <tr>
         <th>Sender name</th>
-        <th colspan="2">Action</th>
+        <th colspan="2">Action / status</th>
       </tr>
+      
         <% contacts.forEach((contact) => { %> 
           <% if (contact.receiver == user.id) { %>
             <% if (contact.isAccepted) { %>
@@ -232,14 +231,15 @@
               <% } %>     
            <% } %>
         <% }) %>
-      </tr>
 
       <script>
       function acceptHandler(inviteId, receiverId) {
+          location.reload()
            return socket.emit('acceptRequest', { inviteId, receiverId });
       }
 
       function rejectHandler(inviteId, receiverId) {
+          location.reload()
            return socket.emit('rejectRequest', { inviteId, receiverId });
       }
       </script>
