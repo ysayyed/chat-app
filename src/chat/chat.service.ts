@@ -15,10 +15,6 @@ export class ChatService {
     return await newMessage.save();
   }
 
-  async getMessages(): Promise<any[]> {
-    return await this.chatModel.find().exec();
-  }
-
   async getContactMessages(requestId: any, userId: any) {
     const chats = await this.chatModel
       .find({

@@ -66,13 +66,40 @@
         </div>
         <% } %> <% }) %>
       </div>
+      <div style="margin-left: 40px;">
+        <form id="uploadForm" method="post" enctype="multipart/form-data">
+          <input type="file" name="file" id="file">
+          <button type="submit">Send</button>
+        </form>
+      </div>
+      <script>
+        const form = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('file');
+        form.addEventListener('submit', function(event){
+            event.preventDefault();
+            const formData = new FormData()
+            formData.append('file', fileInput.files[0])
+            fetch("http://127.0.0.1:3000/chat/<%= user.id%>/fileUpload/<%= receiver.id%>",
+            {
+              method: 'post',
+              body: formData
+            }
+            )
+            form.reset();
+        })
+      </script>
+
+
       <div style="position: fixed; margin: 40px; bottom: 10px">
         <input id="sendarea" autocomplete="off" type="text" />
         <button class="sendBtn" onClick="submitHandler()">Send</button>
       </div>
+      
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      var messageDiv = document.getElementById('messageArea');
+      messageDiv.scrollTop = messageDiv.scrollHeight;
       var socket = io();
       function submitHandler() {
         const message = document.getElementById('sendarea');
@@ -96,8 +123,6 @@
         message.value = '';
         document.getElementById('sendarea').focus();
       }
-      var messageDiv = document.getElementById('messageArea');
-      messageDiv.scrollTop = messageDiv.scrollHeight;
       socket.on('receivedChat', (data) => {
         const { sender, receiver, message, createdAt } = data;
         const userId = '<%= user._id %>';

@@ -1,7 +1,10 @@
-import { Controller, Get, Param, Render } from '@nestjs/common';
+import { Controller, Get, Param, Post, Render, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { UserService } from 'src/user/user.service';
 import { ContactsService } from 'src/contacts/contacts.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+
 
 @Controller('chat/:userId')
 export class ChatController {
@@ -21,6 +24,24 @@ export class ChatController {
     const user = await this.userService.findOne(userId);
     const receiver = await this.userService.findOne(requestId);
     return { user: user, receiver: receiver, chats };
+  }
+
+  @Post('/fileUpload/:requestId')
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: './uploads',
+      filename: function (req,file, cb){
+        return cb(null, `${file.originalname}`)
+      }
+    })
+  }))
+  
+  async saveFile(
+    @Param('requestId') requestId:any,
+    @Param('userId') userId:any,
+    @UploadedFile() file: any
+  ) {
+    return file
   }
 
   @Get()
