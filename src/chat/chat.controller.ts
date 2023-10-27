@@ -1,10 +1,19 @@
-import { Controller, Get, Param, Post, Render, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Render,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { UserService } from 'src/user/user.service';
 import { ContactsService } from 'src/contacts/contacts.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-
+import { NextFunction } from 'express';
 
 @Controller('chat/:userId')
 export class ChatController {
@@ -27,21 +36,28 @@ export class ChatController {
   }
 
   @Post('/fileUpload/:requestId')
-  @UseInterceptors(FileInterceptor('file', {
-    storage: diskStorage({
-      destination: './uploads',
-      filename: function (req,file, cb){
-        return cb(null, `${file.originalname}`)
-      }
-    })
-  }))
-  
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: function (req, file, cb) {
+          return cb(null, `${file.originalname}`);
+        },
+      }),
+    }),
+  )
   async saveFile(
-    @Param('requestId') requestId:any,
-    @Param('userId') userId:any,
-    @UploadedFile() file: any
+    @Param('requestId') requestId: any,
+    @Param('userId') userId: any,
+    @UploadedFile() file: any,
   ) {
-    return file
+    return file;
+  }
+
+  @Post()
+  async create(@Body() data: any) {
+    const { sender, text, receiver } = data;
+    return this.chatService.saveMessage(sender, text, receiver);
   }
 
   @Get()

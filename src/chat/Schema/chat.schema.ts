@@ -7,7 +7,7 @@ export const chatSchema = new Schema(
       ref: 'User',
       index: true,
     },
-    message: {
+    text: {
       type: String,
       required: true,
       index: true,
@@ -23,6 +23,6 @@ export const chatSchema = new Schema(
 
 export interface IChat extends Document {
   sender: string;
-  message: string;
+  text: string;
   receiver: string;
 }

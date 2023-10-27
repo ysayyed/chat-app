@@ -13,52 +13,39 @@ export class ContactsService {
     private contactModel: Model<IContact>,
   ) {}
 
-  async create(createContactDto: CreateContactDto) {
-    const contact = await this.contactModel.create(createContactDto);
-    return contact;
-  }
-
-  async requestContact(data: any) {
+  async requestContact(data: CreateContactDto): Promise<IContact> {
     const request = await this.contactModel.create(data);
     return request;
   }
 
-  findAll() {
-    return `This action returns all contacts`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} contact`;
-  }
-
   async acceptRequest(data: any) {
     const { inviteId, receiverId } = data;
-    await this.contactModel.findOneAndUpdate(
-      {
-        receiver: new Types.ObjectId(receiverId),
-        requestFrom: new Types.ObjectId(inviteId),
-      },
-      { $set: { isAccepted: true, isRejected: false } },
-    );
-    // console.log(acceptedRequest);
-    return;
+    try {
+      await this.contactModel.findOneAndUpdate(
+        {
+          receiver: new Types.ObjectId(receiverId),
+          requestFrom: new Types.ObjectId(inviteId),
+        },
+        { $set: { isAccepted: true, isRejected: false } },
+      );
+      return { status: true, message: 'Updated' };
+    } catch (error) {
+      return { status: false, message: "Can't update", error };
+    }
   }
 
   async rejectRequest(data: any) {
     const { inviteId, receiverId } = data;
-    await this.contactModel.findOneAndDelete(
-      {
-        receiver: new Types.ObjectId(receiverId),
-        requestFrom: new Types.ObjectId(inviteId),
-      });
+    await this.contactModel.findOneAndDelete({
+      receiver: new Types.ObjectId(receiverId),
+      requestFrom: new Types.ObjectId(inviteId),
+    });
     return;
   }
 
   async findContacts(userId: any) {
-    // const contacts = await this.contactModel.find({ receiver: receiver });
-    // console.log(userId)
-    const contacts = await this.contactModel.find({_id: {$ne: userId}});
-      // console.log(contacts)
+    const contacts = await this.contactModel.find({ _id: { $ne: userId } });
+    // console.log(contacts)
     return contacts;
   }
 
@@ -85,6 +72,4 @@ export class ContactsService {
   remove(id: number) {
     return `This action removes a #${id} contact`;
   }
-  
-    
 }
