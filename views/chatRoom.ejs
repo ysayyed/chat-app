@@ -51,7 +51,7 @@
         <% chats.forEach((chat) => { %> <% if (chat.sender == user.id) { %>
         <div class="sender">
           <p>
-            <%= chat.message %> <br /><span class="time"
+            <%= chat.text %> <br /><span class="time"
               ><%= chat.createdAt.toLocaleTimeString() %></span
             >
           </p>
@@ -59,42 +59,41 @@
         <% } else if (chat.sender == receiver.id) { %>
         <div class="recepient">
           <p>
-            <%= chat.message %> <br /><span class="time"
+            <%= chat.text %> <br /><span class="time"
               ><%= chat.createdAt.toLocaleTimeString() %></span
             >
           </p>
         </div>
         <% } %> <% }) %>
       </div>
-      <div style="margin-left: 40px;">
+      <div style="margin-left: 40px">
         <form id="uploadForm" method="post" enctype="multipart/form-data">
-          <input type="file" name="file" id="file">
+          <input type="file" name="file" id="file" />
           <button type="submit">Send</button>
         </form>
       </div>
       <script>
         const form = document.getElementById('uploadForm');
         const fileInput = document.getElementById('file');
-        form.addEventListener('submit', function(event){
-            event.preventDefault();
-            const formData = new FormData()
-            formData.append('file', fileInput.files[0])
-            fetch("http://127.0.0.1:3000/chat/<%= user.id%>/fileUpload/<%= receiver.id%>",
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          const formData = new FormData();
+          formData.append('file', fileInput.files[0]);
+          fetch(
+            'http://127.0.0.1:3000/chat/<%= user.id%>/fileUpload/<%= receiver.id%>',
             {
               method: 'post',
-              body: formData
-            }
-            )
-            form.reset();
-        })
+              body: formData,
+            },
+          );
+          form.reset();
+        });
       </script>
-
 
       <div style="position: fixed; margin: 40px; bottom: 10px">
         <input id="sendarea" autocomplete="off" type="text" />
         <button class="sendBtn" onClick="submitHandler()">Send</button>
       </div>
-      
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -116,7 +115,7 @@
         para.appendChild(time);
         messageArea.appendChild(para);
         socket.emit('chat', {
-          message: message.value,
+          text: message.value,
           sender: '<%= user._id %>',
           receiver: '<%= receiver._id %>',
         });
@@ -124,7 +123,7 @@
         document.getElementById('sendarea').focus();
       }
       socket.on('receivedChat', (data) => {
-        const { sender, receiver, message, createdAt } = data;
+        const { sender, receiver, text, createdAt } = data;
         const userId = '<%= user._id %>';
         if (userId == receiver) {
           const messageArea = document.getElementById('messageArea');
@@ -134,7 +133,7 @@
           time.setAttribute('class', 'time');
           let t = new Date();
           t = t.toLocaleTimeString();
-          para.innerHTML = message;
+          para.innerHTML = text;
           time.innerHTML = t;
           para.appendChild(document.createElement('br'));
           para.appendChild(time);

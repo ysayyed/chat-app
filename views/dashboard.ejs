@@ -128,38 +128,31 @@
         <th>User Name</th>
         <th>Action</th>
       </tr>
-      <% if (nonContacts.length > 0) { %>
-       
-        <% nonContacts.forEach(nonContact => { %>
-          <tr>
-            <td>
-              <%= nonContact.name %>
-            </td>
-            <td>
-              <button 
-              onClick="requestHandler('<%= user._id%>', '<%= user.name%>','<%= nonContact.id %>', '<%= nonContact.name %>')"
-              >
-              Send Request
-            </button>
-          </td>
-        </tr>
-        <% }) %>
-        <% } else { %>
-          <tr>
-            <td colspan="2">No new users</td>
-          </tr>
+      <% if (nonContacts.length > 0) { %> <% nonContacts.forEach(nonContact => {
+      %>
+      <tr>
+        <td><%= nonContact.name %></td>
+        <td>
+          <button
+            onClick="requestHandler('<%= user._id%>', '<%= user.name%>','<%= nonContact.id %>', '<%= nonContact.name %>')"
+          >
+            Send Request
+          </button>
+        </td>
+      </tr>
+      <% }) %> <% } else { %>
+      <tr>
+        <td colspan="2">No new users</td>
+      </tr>
 
-        <% } %>  
-
+      <% } %>
     </table>
-
-
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io();
       function requestHandler(senderId, senderName, receiverId, recepient) {
-        location.reload()
+        location.reload();
         return socket.emit('contactRequest', {
           sender: senderName,
           recepient: recepient,
@@ -181,21 +174,18 @@
         <th>Invitation to</th>
         <th>Status</th>
       </tr>
-        <% contacts.forEach((contact) => { %> 
-          <% if (contact.requestFrom == user.id) { %>
-            <% if (contact.isAccepted) { %>
-              <tr>
-                <td><%= contact.recepient %></td>
-                <td>Accepted</td>
-              </tr>
-              <% } else if(!contact.isAccepted) { %>
-              <tr>
-                <td><%= contact.recepient %></td>
-                <td>Pending</td>
-              </tr>
-              <% } %>     
-           <% } %>
-        <% }) %>
+      <% contacts.forEach((contact) => { %> <% if (contact.requestFrom ==
+      user.id) { %> <% if (contact.isAccepted) { %>
+      <tr>
+        <td><%= contact.recepient %></td>
+        <td>Accepted</td>
+      </tr>
+      <% } else if(!contact.isAccepted) { %>
+      <tr>
+        <td><%= contact.recepient %></td>
+        <td>Pending</td>
+      </tr>
+      <% } %> <% } %> <% }) %>
     </table>
     <br />
     <br />
@@ -208,40 +198,41 @@
         <th>Sender name</th>
         <th colspan="2">Action / status</th>
       </tr>
-      
-        <% contacts.forEach((contact) => { %> 
-          <% if (contact.receiver == user.id) { %>
-            <% if (contact.isAccepted) { %>
-              <tr>
-              <td><%= contact.sender %></td>
-              <td>Accepted</td>
-              </tr>
-              <% } else if(!contact.isAccepted) { %>
-              <tr>
 
-              <td><%= contact.sender %></td>
-              <td colspan="2">
-                <button  onClick="acceptHandler('<%= contact.requestFrom %>', '<%= user.id%>')">
-                  Accept
-                </button>
-                <button  onClick="rejectHandler('<%= contact.requestFrom %>', '<%= user.id%>')">
-                  Reject</button>
-              </td>
-              </tr>
-              <% } %>     
-           <% } %>
-        <% }) %>
+      <% contacts.forEach((contact) => { %> <% if (contact.receiver == user.id)
+      { %> <% if (contact.isAccepted) { %>
+      <tr>
+        <td><%= contact.sender %></td>
+        <td>Accepted</td>
+      </tr>
+      <% } else if(!contact.isAccepted) { %>
+      <tr>
+        <td><%= contact.sender %></td>
+        <td colspan="2">
+          <button
+            onClick="acceptHandler('<%= contact.requestFrom %>', '<%= user.id%>')"
+          >
+            Accept
+          </button>
+          <button
+            onClick="rejectHandler('<%= contact.requestFrom %>', '<%= user.id%>')"
+          >
+            Reject
+          </button>
+        </td>
+      </tr>
+      <% } %> <% } %> <% }) %>
 
       <script>
-      function acceptHandler(inviteId, receiverId) {
-          location.reload()
-           return socket.emit('acceptRequest', { inviteId, receiverId });
-      }
+        function acceptHandler(inviteId, receiverId) {
+          location.reload();
+          return socket.emit('acceptRequest', { inviteId, receiverId });
+        }
 
-      function rejectHandler(inviteId, receiverId) {
-          location.reload()
-           return socket.emit('rejectRequest', { inviteId, receiverId });
-      }
+        function rejectHandler(inviteId, receiverId) {
+          location.reload();
+          return socket.emit('rejectRequest', { inviteId, receiverId });
+        }
       </script>
     </table>
   </body>

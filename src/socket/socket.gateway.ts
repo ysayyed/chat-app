@@ -21,8 +21,8 @@ export class SocketGateway {
 
   @SubscribeMessage('chat')
   async handleChatEvent(@MessageBody() data: any) {
-    const { sender, message, receiver } = data;
-    const chat = await this.chatService.saveMessage(sender, message, receiver);
+    const { sender, text, receiver } = data;
+    const chat = await this.chatService.saveMessage(sender, text, receiver);
     this.server.emit('receivedChat', chat);
     return;
   }
